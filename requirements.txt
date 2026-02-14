@@ -1,0 +1,5 @@
+agno                # Agent Framework
+fastmcp             # Tooling Protocol
+google-genai        # <--- CHANGED: The new library Agno needs
+pydantic            # Data validation
+requests            # Network calls
