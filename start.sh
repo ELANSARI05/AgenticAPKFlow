@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-if [ -z "$GOOGLE_API_KEY" ]; then
-  echo "❌ Error: GOOGLE_API_KEY is not set."
+if [ -z "$GROQ_API_KEY" ] && [ -z "$OPENROUTER_API_KEY" ] && [ -z "$GOOGLE_API_KEY" ]; then
+  echo "❌ Error: No API key found. Set GROQ_API_KEY, OPENROUTER_API_KEY or GOOGLE_API_KEY."
   exit 1
 fi
 
