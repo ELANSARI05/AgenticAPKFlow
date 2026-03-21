@@ -1,0 +1,327 @@
+{
+  "meta": {
+    "generated_at": "2026-03-21T15:39:08.065379Z",
+    "tool": "Agentic-APK Analysis System",
+    "version": "3.0",
+    "apk_path": "/app/data/samples/UnCrackable-Level2.apk"
+  },
+  "metadata": {
+    "package_name": "owasp.mstg.uncrackable2",
+    "version_name": "1.0",
+    "version_code": "1",
+    "min_sdk": "19",
+    "target_sdk": "28",
+    "app_label": "Uncrackable Level 2",
+    "debuggable": false,
+    "allow_backup": false,
+    "activities": [],
+    "services": [],
+    "receivers": [],
+    "risk_flags": [
+      {
+        "risk": "MEDIUM",
+        "flag": "Very Low Minimum SDK",
+        "detail": "minSdkVersion=19 \u2014 targets ancient unpatched Android versions"
+      }
+    ],
+    "overall_risk": "MEDIUM",
+    "summary": "Package: owasp.mstg.uncrackable2 v1.0 | SDK 19\u201328 | 1 risk flag(s) [via aapt]",
+    "extraction_method": "aapt"
+  },
+  "permissions": {
+    "total_permissions": 0,
+    "high_risk_count": 0,
+    "medium_risk_count": 0,
+    "overall_risk": "LOW",
+    "permissions": [],
+    "summary": "0 permissions: 0 HIGH-risk, 0 MEDIUM-risk"
+  },
+  "secrets": {
+    "total_secrets_found": 1,
+    "high_risk_count": 1,
+    "overall_risk": "HIGH",
+    "findings": [
+      {
+        "type": "Hardcoded_Password",
+        "risk": "HIGH",
+        "description": "Hardcoded password string",
+        "file": "/sources/android/support/v4/g/a/a.java",
+        "line": 214,
+        "value_preview": ");\n        sb.append(k());\n        sb.append(",
+        "context": "        sb.append(\"; enabled: \");\n        sb.append(j());\n        sb.append(\"; password: \");\n        sb.append(k());\n        sb.append(\"; scrollable: \" + l());"
+      }
+    ],
+    "summary": "Found 1 potential secret(s) \u2014 1 HIGH-risk"
+  },
+  "network": {
+    "total_urls": 0,
+    "unique_domains": 0,
+    "hardcoded_ips": 0,
+    "suspicious_endpoint_count": 0,
+    "overall_risk": "LOW",
+    "urls": [],
+    "domains": [],
+    "ip_addresses": [],
+    "suspicious_endpoints": [],
+    "summary": "0 URLs across 0 domains, 0 hardcoded IPs, 0 suspicious endpoint(s)"
+  },
+  "cryptography": {
+    "crypto_operations_found": 0,
+    "key_material_found": 0,
+    "has_native_code": true,
+    "native_crypto_suspected": true,
+    "overall_risk": "HIGH",
+    "crypto_operations": [],
+    "key_material": [],
+    "native_crypto_note": {
+      "type": "Crypto Likely In Native Library",
+      "risk": "HIGH",
+      "note": "Native method declarations found but no Java-level crypto detected. Cryptographic operations are likely implemented in a .so binary \u2014 requires native binary analysis (e.g., Ghidra, radare2) to inspect."
+    },
+    "summary": "0 crypto operation(s), 0 key material instance(s) (0 hardcoded) \u2014 \u26a0\ufe0f native crypto suspected"
+  },
+  "obfuscation": {
+    "obfuscation_level": "HEAVY",
+    "obfuscation_score": 7,
+    "techniques_detected": 3,
+    "techniques": [
+      {
+        "technique": "Heavy Name Obfuscation (ProGuard/R8)",
+        "risk": "HIGH",
+        "detail": "184/204 classes have 1\u20132 character names (90%)",
+        "confidence": "HIGH"
+      },
+      {
+        "technique": "Java Reflection",
+        "risk": "MEDIUM",
+        "detail": "Reflection-based invocation in 10 file(s)",
+        "files": [
+          "/sources/android/support/v4/b/a/a.java",
+          "/sources/android/support/v4/b/a/f.java",
+          "/sources/android/support/v4/widget/j.java",
+          "/sources/android/support/v7/app/l.java",
+          "/sources/android/support/v7/view/menu/k.java"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique": "Native Code Bridge (.so)",
+        "risk": "HIGH",
+        "detail": "Native method declarations in 1 file(s) \u2014 logic may be hidden in .so libraries",
+        "files": [
+          "/sources/sg/vantagepoint/uncrackable2/MainActivity.java"
+        ],
+        "confidence": "HIGH"
+      }
+    ],
+    "overall_risk": "HIGH",
+    "summary": "Obfuscation: HEAVY (score 7/10) \u2014 3 technique(s) detected"
+  },
+  "anti_analysis": {
+    "anti_analysis_techniques": 1,
+    "overall_risk": "HIGH",
+    "techniques": [
+      {
+        "technique": "Debugger Detection",
+        "risk": "HIGH",
+        "file": "/sources/sg/vantagepoint/uncrackable2/MainActivity.java",
+        "bypass_hint": "Frida: Java.use('android.os.Debug').isDebuggerConnected.implementation = function() { return false; }"
+      }
+    ],
+    "summary": "Detected 1 anti-analysis technique(s): Debugger Detection"
+  },
+  "correlations": {
+    "total_correlations": 0,
+    "high_risk_correlations": 0,
+    "overall_risk": "LOW",
+    "correlations": [],
+    "summary": "Found 0 dangerous permission correlation(s) \u2014 0 HIGH-risk threat(s) identified"
+  },
+  "data_flows": {
+    "total_flows": 2,
+    "high_risk_flows": 0,
+    "overall_risk": "MEDIUM",
+    "flows": [
+      {
+        "source": "Location",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/app/o.java",
+        "description": "Location data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Contacts",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/widget/aq.java",
+        "description": "Contacts data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      }
+    ],
+    "summary": "Detected 2 potential data flow(s) \u2014 0 involve network exfiltration"
+  },
+  "mitre_attack": {
+    "techniques_matched": 7,
+    "tactics_covered": [
+      "Command and Control",
+      "Persistence",
+      "Defense Evasion",
+      "Collection"
+    ],
+    "overall_risk": "HIGH",
+    "techniques": [
+      {
+        "technique_id": "T1437",
+        "technique": "Application Layer Protocol",
+        "tactic": "Command and Control",
+        "description": "App communicates over standard protocols potentially for C2",
+        "evidence": [
+          "http://"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1430",
+        "technique": "Location Tracking",
+        "tactic": "Collection",
+        "description": "App tracks device location",
+        "evidence": [
+          "ACCESS_FINE_LOCATION",
+          "ACCESS_COARSE_LOCATION",
+          "LocationManager"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1417",
+        "technique": "Input Capture: Keylogging",
+        "tactic": "Collection",
+        "description": "App may capture keyboard input",
+        "evidence": [
+          "KeyEvent",
+          "dispatchKeyEvent"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1406",
+        "technique": "Obfuscated Files or Information",
+        "tactic": "Defense Evasion",
+        "description": "App uses obfuscation or dynamic loading to hide behavior",
+        "evidence": [
+          "Base64.decode",
+          "Class.forName"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1629.003",
+        "technique": "Impair Defenses: Disable or Modify Tools",
+        "tactic": "Defense Evasion",
+        "description": "App detects and evades debugging tools",
+        "evidence": [
+          "isDebuggerConnected"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1624.001",
+        "technique": "Event Triggered Execution: Broadcast Receivers",
+        "tactic": "Persistence",
+        "description": "App persists via broadcast receiver triggered on boot",
+        "evidence": [
+          "BroadcastReceiver",
+          "onReceive"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1521.001",
+        "technique": "Encrypted Channel: Symmetric Cryptography",
+        "tactic": "Command and Control",
+        "description": "App uses symmetric encryption \u2014 possibly for C2 traffic",
+        "evidence": [
+          "DES"
+        ],
+        "confidence": "MEDIUM"
+      }
+    ],
+    "summary": "Mapped 7 MITRE ATT&CK technique(s) across 4 tactic(s): Command and Control, Persistence, Defense Evasion, Collection"
+  },
+  "reasoning_trace": {
+    "apk_path": "/app/data/samples/UnCrackable-Level2.apk",
+    "overall_risk": "HIGH",
+    "verdict": "HIGH RISK \u2014 Multiple confirmed threats detected. Immediate investigation recommended.",
+    "trace_steps": [
+      {
+        "step": 1,
+        "phase": "OBSERVE",
+        "action": "Extract application metadata and permissions",
+        "observation": "Package: owasp.mstg.uncrackable2 | Debuggable: False | 0 HIGH-risk permission(s) declared",
+        "tools_used": [
+          "get_apk_metadata",
+          "extract_permissions_with_risk"
+        ]
+      },
+      {
+        "step": 2,
+        "phase": "HYPOTHESIZE",
+        "action": "Correlate permissions with known threat patterns",
+        "hypotheses": [
+          "No dangerous permission combinations detected \u2014 focus on code-level threats"
+        ],
+        "tools_used": [
+          "correlate_permission_behavior"
+        ]
+      },
+      {
+        "step": 3,
+        "phase": "INVESTIGATE",
+        "action": "Deep code analysis \u2014 secrets, crypto, network, data flows, obfuscation",
+        "findings": [
+          "Found 1 hardcoded secret(s)",
+          "Crypto logic hidden in native .so library",
+          "Heavy obfuscation (HEAVY) \u2014 evasion intent suspected",
+          "Anti-analysis: Debugger Detection"
+        ],
+        "tools_used": [
+          "find_hardcoded_secrets",
+          "extract_crypto_usage",
+          "analyze_network_behavior",
+          "trace_data_flows",
+          "detect_obfuscation_techniques",
+          "check_anti_analysis"
+        ]
+      },
+      {
+        "step": 4,
+        "phase": "VALIDATE",
+        "action": "Cross-reference hypotheses against code evidence",
+        "confirmed_threats": [],
+        "unconfirmed_threats": [],
+        "tools_used": [
+          "correlate_permission_behavior"
+        ]
+      },
+      {
+        "step": 5,
+        "phase": "CONCLUDE",
+        "action": "Synthesize all findings into final verdict",
+        "overall_risk": "HIGH",
+        "verdict": "HIGH RISK \u2014 Multiple confirmed threats detected. Immediate investigation recommended.",
+        "risk_breakdown": {
+          "metadata": "MEDIUM",
+          "permissions": "LOW",
+          "secrets": "HIGH",
+          "cryptography": "HIGH",
+          "network": "LOW",
+          "obfuscation": "HIGH",
+          "anti_analysis": "HIGH",
+          "data_flows": "MEDIUM"
+        }
+      }
+    ],
+    "summary": "ReAct trace complete \u2014 5 steps \u2014 Final verdict: HIGH"
+  }
+}

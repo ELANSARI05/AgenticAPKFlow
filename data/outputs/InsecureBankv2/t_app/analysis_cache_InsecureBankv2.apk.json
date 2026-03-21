@@ -1,0 +1,917 @@
+{
+  "meta": {
+    "generated_at": "2026-03-21T15:47:50.196013Z",
+    "tool": "Agentic-APK Analysis System",
+    "version": "3.0",
+    "apk_path": "/app/data/samples/InsecureBankv2.apk"
+  },
+  "metadata": {
+    "package_name": "com.android.insecurebankv2",
+    "version_name": "1.0",
+    "version_code": "1",
+    "min_sdk": "15",
+    "target_sdk": "22",
+    "app_label": "InsecureBankv2",
+    "debuggable": false,
+    "allow_backup": false,
+    "activities": [],
+    "services": [],
+    "receivers": [],
+    "risk_flags": [
+      {
+        "risk": "MEDIUM",
+        "flag": "Very Low Minimum SDK",
+        "detail": "minSdkVersion=15 \u2014 targets ancient unpatched Android versions"
+      }
+    ],
+    "overall_risk": "MEDIUM",
+    "summary": "Package: com.android.insecurebankv2 v1.0 | SDK 15\u201322 | 1 risk flag(s) [via aapt]",
+    "extraction_method": "aapt"
+  },
+  "permissions": {
+    "total_permissions": 12,
+    "high_risk_count": 3,
+    "medium_risk_count": 4,
+    "overall_risk": "HIGH",
+    "permissions": [
+      {
+        "permission": "android.permission.INTERNET",
+        "risk": "MEDIUM",
+        "reason": "Full internet access"
+      },
+      {
+        "permission": "android.permission.WRITE_EXTERNAL_STORAGE",
+        "risk": "MEDIUM",
+        "reason": "Write to SD card"
+      },
+      {
+        "permission": "android.permission.SEND_SMS",
+        "risk": "HIGH",
+        "reason": "Can send SMS \u2014 potential toll-fraud vector"
+      },
+      {
+        "permission": "android.permission.USE_CREDENTIALS",
+        "risk": "INFO",
+        "reason": "Standard or custom permission"
+      },
+      {
+        "permission": "android.permission.GET_ACCOUNTS",
+        "risk": "INFO",
+        "reason": "Standard or custom permission"
+      },
+      {
+        "permission": "android.permission.READ_PROFILE",
+        "risk": "INFO",
+        "reason": "Standard or custom permission"
+      },
+      {
+        "permission": "android.permission.READ_CONTACTS",
+        "risk": "HIGH",
+        "reason": "Exfiltrates contact list"
+      },
+      {
+        "permission": "android.permission.READ_PHONE_STATE",
+        "risk": "MEDIUM",
+        "reason": "Reads IMEI and device identifiers"
+      },
+      {
+        "permission": "android.permission.READ_EXTERNAL_STORAGE",
+        "risk": "MEDIUM",
+        "reason": "Read from SD card"
+      },
+      {
+        "permission": "android.permission.READ_CALL_LOG",
+        "risk": "HIGH",
+        "reason": "Reads full call history"
+      },
+      {
+        "permission": "android.permission.ACCESS_NETWORK_STATE",
+        "risk": "LOW",
+        "reason": "Check network connectivity"
+      },
+      {
+        "permission": "android.permission.ACCESS_COARSE_LOCATION",
+        "risk": "INFO",
+        "reason": "Standard or custom permission"
+      }
+    ],
+    "summary": "12 permissions: 3 HIGH-risk, 4 MEDIUM-risk"
+  },
+  "secrets": {
+    "total_secrets_found": 5,
+    "high_risk_count": 5,
+    "overall_risk": "HIGH",
+    "findings": [
+      {
+        "type": "Hardcoded_Password",
+        "risk": "HIGH",
+        "description": "Hardcoded password string",
+        "file": "/sources/android/support/v4/view/accessibility/AccessibilityNodeInfoCompat.java",
+        "line": 1768,
+        "value_preview": ").append(isPassword());\n        builder.append(",
+        "context": "        builder.append(\"; longClickable: \").append(isLongClickable());\n        builder.append(\"; enabled: \").append(isEnabled());\n        builder.append(\"; password: \").append(isPassword());\n        builder.append(\"; scrollable: \" + isScrollable());\n        builder.append(\"; [\");"
+      },
+      {
+        "type": "Hardcoded_Password",
+        "risk": "HIGH",
+        "description": "Hardcoded password string",
+        "file": "/sources/com/android/insecurebankv2/ChangePassword.java",
+        "line": 70,
+        "value_preview": " + this.uname);\n        this.textView_Username = (TextView) findViewById(R.id.te\u2026",
+        "context": "        Intent intent = getIntent();\n        this.uname = intent.getStringExtra(\"uname\");\n        System.out.println(\"newpassword=\" + this.uname);\n        this.textView_Username = (TextView) findViewById(R.id.textView_Username);\n        this.textView_Username.setText(this.uname);"
+      },
+      {
+        "type": "SecretKeySpec_Instantiation",
+        "risk": "HIGH",
+        "description": "Crypto key being instantiated \u2014 trace the first argument's origin",
+        "file": "/sources/com/android/insecurebankv2/CryptoClass.java",
+        "line": 27,
+        "value_preview": "keyBytes",
+        "context": "    public static byte[] aes256encrypt(byte[] ivBytes, byte[] keyBytes, byte[] textBytes) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {\n        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);\n        SecretKeySpec newKey = new SecretKeySpec(keyBytes, \"AES\");\n        Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n        cipher.init(1, newKey, ivSpec);"
+      },
+      {
+        "type": "SecretKeySpec_Instantiation",
+        "risk": "HIGH",
+        "description": "Crypto key being instantiated \u2014 trace the first argument's origin",
+        "file": "/sources/com/android/insecurebankv2/CryptoClass.java",
+        "line": 35,
+        "value_preview": "keyBytes",
+        "context": "    public static byte[] aes256decrypt(byte[] ivBytes, byte[] keyBytes, byte[] textBytes) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {\n        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);\n        SecretKeySpec newKey = new SecretKeySpec(keyBytes, \"AES\");\n        Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n        cipher.init(2, newKey, ivSpec);"
+      },
+      {
+        "type": "SecretKeySpec_Instantiation",
+        "risk": "HIGH",
+        "description": "Crypto key being instantiated \u2014 trace the first argument's origin",
+        "file": "/sources/com/google/android/gms/internal/zzar.java",
+        "line": 57,
+        "value_preview": "bArr",
+        "context": "            allocate.get(bArr2);\n            allocate.get(bArr3);\n            SecretKeySpec secretKeySpec = new SecretKeySpec(bArr, \"AES\");\n            Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n            cipher.init(2, secretKeySpec, new IvParameterSpec(bArr2));"
+      }
+    ],
+    "summary": "Found 5 potential secret(s) \u2014 5 HIGH-risk"
+  },
+  "network": {
+    "total_urls": 56,
+    "unique_domains": 18,
+    "hardcoded_ips": 1,
+    "suspicious_endpoint_count": 23,
+    "overall_risk": "HIGH",
+    "urls": [
+      "http://goo.gl/8Rd3yj",
+      "http://goo.gl/naFqQk",
+      "http://hostname/?",
+      "http://plus.google.com/",
+      "http://schema.org/ActivateAction",
+      "http://schema.org/ActiveActionStatus",
+      "http://schema.org/AddAction",
+      "http://schema.org/BookmarkAction",
+      "http://schema.org/CommunicateAction",
+      "http://schema.org/CompletedActionStatus",
+      "http://schema.org/FailedActionStatus",
+      "http://schema.org/FilmAction",
+      "http://schema.org/LikeAction",
+      "http://schema.org/ListenAction",
+      "http://schema.org/PhotographAction",
+      "http://schema.org/ReserveAction",
+      "http://schema.org/SearchAction",
+      "http://schema.org/ViewAction",
+      "http://schema.org/WantAction",
+      "http://schema.org/WatchAction",
+      "http://www.google-analytics.com",
+      "http://www.google.com",
+      "https://accounts.google.com",
+      "https://csi.gstatic.com/csi",
+      "https://googleads.g.doubleclick.net/mads/static/mad/sdk/native/mraid/v2/mraid_app_banner.js"
+    ],
+    "domains": [
+      "accounts.google.com",
+      "csi.gstatic.com",
+      "goo.gl",
+      "googleads.g.doubleclick.net",
+      "hostname",
+      "login.live.com",
+      "login.yahoo.com",
+      "plus.google.com",
+      "schema.org",
+      "ssl.google-analytics.com",
+      "twitter.com",
+      "www.facebook.com",
+      "www.google-analytics.com",
+      "www.google.com",
+      "www.googleapis.com",
+      "www.googletagmanager.com",
+      "www.linkedin.com",
+      "www.paypal.com"
+    ],
+    "ip_addresses": [
+      "1.1.1.1"
+    ],
+    "suspicious_endpoints": [
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://goo.gl/8Rd3yj",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/analytics/AnalyticsReceiver.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://hostname/?",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/analytics/Tracker.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://goo.gl/naFqQk",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/analytics/internal/zza.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://www.google-analytics.com",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/analytics/internal/zzy.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/ActiveActionStatus",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/CompletedActionStatus",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/FailedActionStatus",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/ActivateAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/AddAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/BookmarkAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/CommunicateAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/FilmAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/LikeAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/ListenAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/PhotographAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/ReserveAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/SearchAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/ViewAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/WantAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://schema.org/WatchAction",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/appindexing/Action.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://plus.google.com/",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/common/internal/zzm.java"
+      },
+      {
+        "type": "Hardcoded Public IP",
+        "risk": "HIGH",
+        "value": "1.1.1.1",
+        "reason": "Hardcoded routable IP \u2014 potential C2 server",
+        "file": "/sources/com/google/android/gms/internal/zzdt.java"
+      },
+      {
+        "type": "Cleartext HTTP",
+        "risk": "MEDIUM",
+        "value": "http://www.google.com",
+        "reason": "Unencrypted connection \u2014 susceptible to MitM interception",
+        "file": "/sources/com/google/android/gms/internal/zzgk.java"
+      }
+    ],
+    "summary": "56 URLs across 18 domains, 1 hardcoded IPs, 23 suspicious endpoint(s)"
+  },
+  "cryptography": {
+    "crypto_operations_found": 8,
+    "key_material_found": 3,
+    "has_native_code": false,
+    "native_crypto_suspected": false,
+    "overall_risk": "MEDIUM",
+    "crypto_operations": [
+      {
+        "algorithm": "AES/CBC/PKCS5Padding",
+        "risk": "MEDIUM",
+        "reason": "AES is sound \u2014 but check key management and mode",
+        "file": "/sources/com/android/insecurebankv2/CryptoClass.java",
+        "line": 28
+      },
+      {
+        "algorithm": "AES/CBC/PKCS5Padding",
+        "risk": "MEDIUM",
+        "reason": "AES is sound \u2014 but check key management and mode",
+        "file": "/sources/com/android/insecurebankv2/CryptoClass.java",
+        "line": 36
+      },
+      {
+        "algorithm": "MD5",
+        "risk": "HIGH",
+        "reason": "MD5 is collision-vulnerable \u2014 not safe for security",
+        "file": "/sources/com/google/android/gms/ads/internal/util/client/zza.java",
+        "line": 116
+      },
+      {
+        "algorithm": "SHA1",
+        "risk": "MEDIUM",
+        "reason": "SHA-1 is deprecated for security applications",
+        "file": "/sources/com/google/android/gms/iid/InstanceID.java",
+        "line": 65
+      },
+      {
+        "algorithm": "MD5",
+        "risk": "HIGH",
+        "reason": "MD5 is collision-vulnerable \u2014 not safe for security",
+        "file": "/sources/com/google/android/gms/internal/zzak.java",
+        "line": 82
+      },
+      {
+        "algorithm": "AES/CBC/PKCS5Padding",
+        "risk": "MEDIUM",
+        "reason": "AES is sound \u2014 but check key management and mode",
+        "file": "/sources/com/google/android/gms/internal/zzar.java",
+        "line": 58
+      },
+      {
+        "algorithm": "MD5",
+        "risk": "HIGH",
+        "reason": "MD5 is collision-vulnerable \u2014 not safe for security",
+        "file": "/sources/com/google/android/gms/internal/zzbl.java",
+        "line": 20
+      },
+      {
+        "algorithm": "MD5",
+        "risk": "HIGH",
+        "reason": "MD5 is collision-vulnerable \u2014 not safe for security",
+        "file": "/sources/com/google/android/gms/internal/zzhl.java",
+        "line": 598
+      }
+    ],
+    "key_material": [
+      {
+        "type": "Key From Variable",
+        "risk": "MEDIUM",
+        "variable_name": "keyBytes",
+        "algorithm": "AES",
+        "file": "/sources/com/android/insecurebankv2/CryptoClass.java",
+        "line": 27,
+        "context": "    public static byte[] aes256encrypt(byte[] ivBytes, byte[] keyBytes, byte[] textBytes) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {\n        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);\n        SecretKeySpec newKey = new SecretKeySpec(keyBytes, \"AES\");\n        Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n        cipher.init(1, newKey, ivSpec);",
+        "note": "Trace 'keyBytes' to find its origin"
+      },
+      {
+        "type": "Key From Variable",
+        "risk": "MEDIUM",
+        "variable_name": "keyBytes",
+        "algorithm": "AES",
+        "file": "/sources/com/android/insecurebankv2/CryptoClass.java",
+        "line": 35,
+        "context": "    public static byte[] aes256decrypt(byte[] ivBytes, byte[] keyBytes, byte[] textBytes) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {\n        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);\n        SecretKeySpec newKey = new SecretKeySpec(keyBytes, \"AES\");\n        Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n        cipher.init(2, newKey, ivSpec);",
+        "note": "Trace 'keyBytes' to find its origin"
+      },
+      {
+        "type": "Key From Variable",
+        "risk": "MEDIUM",
+        "variable_name": "bArr",
+        "algorithm": "AES",
+        "file": "/sources/com/google/android/gms/internal/zzar.java",
+        "line": 57,
+        "context": "            allocate.get(bArr2);\n            allocate.get(bArr3);\n            SecretKeySpec secretKeySpec = new SecretKeySpec(bArr, \"AES\");\n            Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n            cipher.init(2, secretKeySpec, new IvParameterSpec(bArr2));",
+        "note": "Trace 'bArr' to find its origin"
+      }
+    ],
+    "native_crypto_note": null,
+    "summary": "8 crypto operation(s), 3 key material instance(s) (0 hardcoded)"
+  },
+  "obfuscation": {
+    "obfuscation_level": "MODERATE",
+    "obfuscation_score": 5,
+    "techniques_detected": 2,
+    "techniques": [
+      {
+        "technique": "Java Reflection",
+        "risk": "MEDIUM",
+        "detail": "Reflection-based invocation in 27 file(s)",
+        "files": [
+          "/sources/android/support/v4/app/ActionBarDrawerToggleHoneycomb.java",
+          "/sources/android/support/v4/app/NotificationCompatJellybean.java",
+          "/sources/android/support/v4/media/routing/MediaRouterJellybean.java",
+          "/sources/android/support/v4/media/routing/MediaRouterJellybeanMr1.java",
+          "/sources/android/support/v4/text/ICUCompatIcs.java"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique": "Dynamic Class Loading",
+        "risk": "HIGH",
+        "detail": "DexClassLoader/PathClassLoader in 10 file(s) \u2014 code loaded at runtime",
+        "files": [
+          "/sources/android/support/v4/app/Fragment.java",
+          "/sources/android/support/v7/internal/app/AppCompatViewInflater.java",
+          "/sources/android/support/v7/internal/view/SupportMenuInflater.java",
+          "/sources/com/google/android/gms/ads/internal/purchase/zzb.java",
+          "/sources/com/google/android/gms/ads/internal/purchase/zzd.java"
+        ],
+        "confidence": "HIGH"
+      }
+    ],
+    "overall_risk": "MEDIUM",
+    "summary": "Obfuscation: MODERATE (score 5/10) \u2014 2 technique(s) detected"
+  },
+  "anti_analysis": {
+    "anti_analysis_techniques": 2,
+    "overall_risk": "HIGH",
+    "techniques": [
+      {
+        "technique": "Timing Attacks",
+        "risk": "LOW",
+        "file": "/sources/android/support/v4/media/session/MediaSessionCompat.java",
+        "bypass_hint": "Hook timing functions via Frida to return consistent values"
+      },
+      {
+        "technique": "Root Detection",
+        "risk": "HIGH",
+        "file": "/sources/com/google/android/gms/common/zzd.java",
+        "bypass_hint": "Magisk Hide module or patch detection methods with Frida"
+      }
+    ],
+    "summary": "Detected 2 anti-analysis technique(s): Timing Attacks, Root Detection"
+  },
+  "correlations": {
+    "total_correlations": 3,
+    "high_risk_correlations": 3,
+    "overall_risk": "HIGH",
+    "correlations": [
+      {
+        "threat_name": "Contact Harvesting",
+        "risk": "HIGH",
+        "mitre_technique": "T1636.003",
+        "hypothesis": "Contact access + internet = contact list exfiltration",
+        "matched_permissions": [
+          "android.permission.READ_CONTACTS",
+          "android.permission.INTERNET"
+        ],
+        "api_evidence": [
+          "getContentResolver"
+        ],
+        "confidence": "HIGH",
+        "verdict": "CONFIRMED \u2014 API usage detected: getContentResolver"
+      },
+      {
+        "threat_name": "Toll Fraud",
+        "risk": "HIGH",
+        "mitre_technique": "T1616",
+        "hypothesis": "SEND_SMS permission \u2014 can silently send premium-rate SMS messages",
+        "matched_permissions": [
+          "android.permission.SEND_SMS"
+        ],
+        "api_evidence": [
+          "SmsManager.sendTextMessage"
+        ],
+        "confidence": "HIGH",
+        "verdict": "CONFIRMED \u2014 API usage detected: SmsManager.sendTextMessage"
+      },
+      {
+        "threat_name": "Dynamic Code Loading",
+        "risk": "HIGH",
+        "mitre_technique": "T1407",
+        "hypothesis": "Internet + write storage = can download and execute new DEX/APK payloads",
+        "matched_permissions": [
+          "android.permission.WRITE_EXTERNAL_STORAGE",
+          "android.permission.INTERNET"
+        ],
+        "api_evidence": [
+          "DexClassLoader"
+        ],
+        "confidence": "HIGH",
+        "verdict": "CONFIRMED \u2014 API usage detected: DexClassLoader"
+      }
+    ],
+    "summary": "Found 3 dangerous permission correlation(s) \u2014 3 HIGH-risk threat(s) identified"
+  },
+  "data_flows": {
+    "total_flows": 11,
+    "high_risk_flows": 0,
+    "overall_risk": "MEDIUM",
+    "flows": [
+      {
+        "source": "IMEI",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/app/AppCompatDelegateImplV7.java",
+        "description": "IMEI data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Contacts",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/widget/SuggestionsAdapter.java",
+        "description": "Contacts data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Storage",
+        "risk": "MEDIUM",
+        "file": "/sources/com/android/insecurebankv2/DoTransfer.java",
+        "description": "Crypto_Key data accessed and potentially sent to Storage",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/com/android/insecurebankv2/DoTransfer.java",
+        "description": "Crypto_Key data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Storage",
+        "risk": "MEDIUM",
+        "file": "/sources/com/android/insecurebankv2/LoginActivity.java",
+        "description": "Crypto_Key data accessed and potentially sent to Storage",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Storage",
+        "risk": "MEDIUM",
+        "file": "/sources/com/android/insecurebankv2/MyBroadCastReceiver.java",
+        "description": "Crypto_Key data accessed and potentially sent to Storage",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "SMS_Send",
+        "risk": "MEDIUM",
+        "file": "/sources/com/android/insecurebankv2/MyBroadCastReceiver.java",
+        "description": "Crypto_Key data accessed and potentially sent to SMS_Send",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/com/android/insecurebankv2/MyBroadCastReceiver.java",
+        "description": "Crypto_Key data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Storage",
+        "risk": "MEDIUM",
+        "file": "/sources/com/google/android/gms/iid/zzd.java",
+        "description": "Crypto_Key data accessed and potentially sent to Storage",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Crypto_Key",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/com/google/android/gms/iid/zzd.java",
+        "description": "Crypto_Key data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Location",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/com/google/android/gms/location/internal/zzi.java",
+        "description": "Location data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      }
+    ],
+    "summary": "Detected 11 potential data flow(s) \u2014 0 involve network exfiltration"
+  },
+  "mitre_attack": {
+    "techniques_matched": 13,
+    "tactics_covered": [
+      "Discovery",
+      "Collection",
+      "Command and Control",
+      "Defense Evasion",
+      "Persistence"
+    ],
+    "overall_risk": "HIGH",
+    "techniques": [
+      {
+        "technique_id": "T1437",
+        "technique": "Application Layer Protocol",
+        "tactic": "Command and Control",
+        "description": "App communicates over standard protocols potentially for C2",
+        "evidence": [
+          "http://",
+          "https://",
+          "URLConnection",
+          "HttpClient"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1636.004",
+        "technique": "Protected User Data: SMS Messages",
+        "tactic": "Collection",
+        "description": "App accesses SMS messages \u2014 potential 2FA interception",
+        "evidence": [
+          "SmsManager"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1636.001",
+        "technique": "Protected User Data: Calendar Entries",
+        "tactic": "Collection",
+        "description": "App reads calendar data",
+        "evidence": [
+          "CalendarContract"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1636.002",
+        "technique": "Protected User Data: Call Log",
+        "tactic": "Collection",
+        "description": "App accesses call history",
+        "evidence": [
+          "READ_CALL_LOG"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1636.003",
+        "technique": "Protected User Data: Contact List",
+        "tactic": "Collection",
+        "description": "App reads contact list",
+        "evidence": [
+          "READ_CONTACTS"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1430",
+        "technique": "Location Tracking",
+        "tactic": "Collection",
+        "description": "App tracks device location",
+        "evidence": [
+          "ACCESS_FINE_LOCATION",
+          "ACCESS_COARSE_LOCATION",
+          "LocationManager",
+          "FusedLocationProvider"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1417",
+        "technique": "Input Capture: Keylogging",
+        "tactic": "Collection",
+        "description": "App may capture keyboard input",
+        "evidence": [
+          "onTextChanged",
+          "KeyEvent",
+          "dispatchKeyEvent"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1406",
+        "technique": "Obfuscated Files or Information",
+        "tactic": "Defense Evasion",
+        "description": "App uses obfuscation or dynamic loading to hide behavior",
+        "evidence": [
+          "Base64.decode",
+          "DexClassLoader",
+          "Class.forName"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1407",
+        "technique": "Download New Code at Runtime",
+        "tactic": "Defense Evasion",
+        "description": "App downloads and executes new code at runtime",
+        "evidence": [
+          "DexClassLoader",
+          "dalvik.system"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1624.001",
+        "technique": "Event Triggered Execution: Broadcast Receivers",
+        "tactic": "Persistence",
+        "description": "App persists via broadcast receiver triggered on boot",
+        "evidence": [
+          "BroadcastReceiver",
+          "onReceive"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1422",
+        "technique": "System Network Configuration Discovery",
+        "tactic": "Discovery",
+        "description": "App enumerates network configuration",
+        "evidence": [
+          "getNetworkInfo"
+        ],
+        "confidence": "MEDIUM"
+      },
+      {
+        "technique_id": "T1426",
+        "technique": "System Information Discovery",
+        "tactic": "Discovery",
+        "description": "App collects device identifiers (IMEI, serial number)",
+        "evidence": [
+          "READ_PHONE_STATE",
+          "TelephonyManager",
+          "getDeviceId"
+        ],
+        "confidence": "HIGH"
+      },
+      {
+        "technique_id": "T1521.001",
+        "technique": "Encrypted Channel: Symmetric Cryptography",
+        "tactic": "Command and Control",
+        "description": "App uses symmetric encryption \u2014 possibly for C2 traffic",
+        "evidence": [
+          "AES",
+          "DES",
+          "Cipher.getInstance",
+          "SecretKeySpec"
+        ],
+        "confidence": "HIGH"
+      }
+    ],
+    "summary": "Mapped 13 MITRE ATT&CK technique(s) across 5 tactic(s): Discovery, Collection, Command and Control, Defense Evasion, Persistence"
+  },
+  "reasoning_trace": {
+    "apk_path": "/app/data/samples/InsecureBankv2.apk",
+    "overall_risk": "HIGH",
+    "verdict": "HIGH RISK \u2014 Multiple confirmed threats detected. Immediate investigation recommended.",
+    "trace_steps": [
+      {
+        "step": 1,
+        "phase": "OBSERVE",
+        "action": "Extract application metadata and permissions",
+        "observation": "Package: com.android.insecurebankv2 | Debuggable: False | 3 HIGH-risk permission(s) declared",
+        "tools_used": [
+          "get_apk_metadata",
+          "extract_permissions_with_risk"
+        ]
+      },
+      {
+        "step": 2,
+        "phase": "HYPOTHESIZE",
+        "action": "Correlate permissions with known threat patterns",
+        "hypotheses": [
+          "Contact access + internet = contact list exfiltration",
+          "SEND_SMS permission \u2014 can silently send premium-rate SMS messages",
+          "Internet + write storage = can download and execute new DEX/APK payloads"
+        ],
+        "tools_used": [
+          "correlate_permission_behavior"
+        ]
+      },
+      {
+        "step": 3,
+        "phase": "INVESTIGATE",
+        "action": "Deep code analysis \u2014 secrets, crypto, network, data flows, obfuscation",
+        "findings": [
+          "Found 5 hardcoded secret(s)",
+          "Found 1 hardcoded IP(s) \u2014 potential C2",
+          "Heavy obfuscation (MODERATE) \u2014 evasion intent suspected",
+          "Anti-analysis: Timing Attacks, Root Detection"
+        ],
+        "tools_used": [
+          "find_hardcoded_secrets",
+          "extract_crypto_usage",
+          "analyze_network_behavior",
+          "trace_data_flows",
+          "detect_obfuscation_techniques",
+          "check_anti_analysis"
+        ]
+      },
+      {
+        "step": 4,
+        "phase": "VALIDATE",
+        "action": "Cross-reference hypotheses against code evidence",
+        "confirmed_threats": [
+          "\u2705 CONFIRMED: Contact Harvesting \u2014 CONFIRMED \u2014 API usage detected: getContentResolver",
+          "\u2705 CONFIRMED: Toll Fraud \u2014 CONFIRMED \u2014 API usage detected: SmsManager.sendTextMessage",
+          "\u2705 CONFIRMED: Dynamic Code Loading \u2014 CONFIRMED \u2014 API usage detected: DexClassLoader"
+        ],
+        "unconfirmed_threats": [],
+        "tools_used": [
+          "correlate_permission_behavior"
+        ]
+      },
+      {
+        "step": 5,
+        "phase": "CONCLUDE",
+        "action": "Synthesize all findings into final verdict",
+        "overall_risk": "HIGH",
+        "verdict": "HIGH RISK \u2014 Multiple confirmed threats detected. Immediate investigation recommended.",
+        "risk_breakdown": {
+          "metadata": "MEDIUM",
+          "permissions": "HIGH",
+          "secrets": "HIGH",
+          "cryptography": "MEDIUM",
+          "network": "HIGH",
+          "obfuscation": "MEDIUM",
+          "anti_analysis": "HIGH",
+          "data_flows": "MEDIUM"
+        }
+      }
+    ],
+    "summary": "ReAct trace complete \u2014 5 steps \u2014 Final verdict: HIGH"
+  }
+}
