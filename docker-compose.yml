@@ -3,13 +3,10 @@ version: '3.8'
 services:
   agentic-apk:
     build: .
-    # 1. ADD THIS LINE explicitly
     env_file:
       - .env
     volumes:
       - ./data:/app/data
       - ./src:/app/src
     environment:
-      # 2. SIMPLIFY THIS LINE (Docker will now pull it from the file above)
       - GOOGLE_API_KEY
-    command: ["python", "src/tools/malware_tools.py"]
