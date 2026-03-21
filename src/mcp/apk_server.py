@@ -31,6 +31,7 @@ from tools.malware_tools import (
     build_reasoning_trace,
     generate_json_report,
     generate_security_report,
+    run_full_analysis,
 )
 
 mcp = FastMCP(
