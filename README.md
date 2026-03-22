@@ -18,7 +18,7 @@ AgenticAPKFlow is a multi-agent AI system that autonomously analyzes Android APK
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  FastMCP Server  (src/mcp/apk_server.py)                │
-│  13 high-level analysis tools over stdio MCP            │
+│  15 high-level analysis tools over stdio MCP            │
 └───────────────────┬─────────────────────────────────────┘
                     │ MCPTools (shared connection)
         ┌───────────┴───────────┐
@@ -57,6 +57,8 @@ The Scout performs surface reconnaissance (metadata, permissions, obfuscation, a
 | `mitre_attack_mapping` | Maps findings to 15 MITRE ATT&CK Mobile techniques |
 | `build_reasoning_trace` | ReAct investigation chain with evidence and verdict |
 | `generate_full_report` | Full Markdown + JSON report from cached results |
+| `cape_dynamic_analysis` | **[NEW]** Parse CAPEv2 sandbox JSON report — extracts runtime API calls, network IOCs, dropped files, registry persistence, process injection |
+| `hybrid_static_dynamic_report` | **[NEW]** Combines static APK analysis + CAPEv2 dynamic findings into unified report with merged MITRE ATT&CK mapping |
 
 ### Output
 
@@ -194,6 +196,34 @@ data/
 
 ---
 
+## Hybrid Analysis (Static + Dynamic)
+
+When a CAPEv2 sandbox report is available, the system produces a **hybrid report** combining static and dynamic findings:
+
+```bash
+# Place your CAPEv2 report JSON in the data/ folder
+docker compose run --rm agentic-apk /app/data/malware.apk
+# Agent automatically detects cape_report.json and calls hybrid analysis
+```
+
+The hybrid report provides:
+- **Runtime API calls** — suspicious calls observed during actual execution (CreateRemoteThread, VirtualAllocEx, RegSetValueExA...)
+- **Live network IOCs** — actual TCP connections, HTTP POST requests, DNS queries made during sandbox run
+- **Dropped files** — executables/payloads dropped during execution
+- **Registry persistence** — Run keys written for auto-start persistence
+- **Process injection** — confirmed via API call sequence (VirtualAllocEx → WriteProcessMemory → CreateRemoteThread)
+- **Unified MITRE table** — techniques from both static and dynamic labeled by source
+
+### Getting CAPEv2 Reports
+
+Use any of these sources:
+- [AVAST-CTU CAPE Dataset](https://github.com/avast/avast-ctu-cape-dataset) — thousands of real malware reports
+- [MalwareBazaar](https://bazaar.abuse.ch) — upload a sample, get sandbox report
+- Your own CAPEv2 instance — `https://capev2.readthedocs.io`
+- Sample report included: `data/sample_cape_report.json` (Emotet sample)
+
+---
+
 ## Limitations
 
 - **Static analysis only** — dynamic behaviors (runtime decryption, C2 communication) require Frida-based dynamic analysis as a follow-up
@@ -223,4 +253,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with Agno, FastMCP, and LLaMA 3.3 · Course Project 2026*
+*Built with Agno, FastMCP, and LLaMA 3.3 · Static + Dynamic Analysis · Course Project 2026*

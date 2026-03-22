@@ -7,7 +7,7 @@ Key improvements over v3.0:
   - Agent reasoning captured to file and injected into report Section 1
   - Scout uses llama-3.1-8b-instant (fast, cheap)
   - Specialist uses llama-3.3-70b-versatile (powerful)
-  - output_path locked to /app/data/outputs/InsecureBankv2/t_app/SECURITY_REPORT.md (no hallucination)
+  - output_path locked to /app/data/SECURITY_REPORT.md (no hallucination)
 """
 
 import os
@@ -27,8 +27,8 @@ if not api_key:
     sys.exit(1)
 
 MCP_SERVER      = "python src/mcp/apk_server.py"
-REASONING_FILE  = "/app/data/outputs/InsecureBankv2/t_app/agent_reasoning.md"
-REPORT_PATH     = "/app/data/outputs/InsecureBankv2/t_app/SECURITY_REPORT.md"
+REASONING_FILE  = "/app/data/agent_reasoning.md"
+REPORT_PATH     = "/app/data/SECURITY_REPORT.md"
 
 
 # ── Rate-limit retry wrappers ─────────────────────────────────────────────────
@@ -165,13 +165,15 @@ You will receive a Scout Brief summarizing surface findings.
 Your job is to investigate the specific threats the Scout identified.
 
 You have access to these tools:
-  - hardcoded_secrets_scan    → API keys, crypto keys, tokens in source
-  - crypto_usage_analysis     → cipher algorithms, key material, native crypto
-  - network_behavior_analysis → URLs, domains, hardcoded IPs, C2 candidates
-  - data_flow_tracing         → sensitive data → network/storage sink paths
-  - mitre_attack_mapping      → MITRE ATT&CK technique classification
-  - get_reasoning_trace       → builds full ReAct investigation chain
-  - generate_full_report      → saves complete Markdown + JSON report
+  - hardcoded_secrets_scan       → API keys, crypto keys, tokens in source
+  - crypto_usage_analysis        → cipher algorithms, key material, native crypto
+  - network_behavior_analysis    → URLs, domains, hardcoded IPs, C2 candidates
+  - data_flow_tracing            → sensitive data → network/storage sink paths
+  - mitre_attack_mapping         → MITRE ATT&CK technique classification
+  - get_reasoning_trace          → builds full ReAct investigation chain
+  - cape_dynamic_analysis        → parse CAPEv2 sandbox report for behavioral IOCs
+  - hybrid_static_dynamic_report → combine static + dynamic findings into one report
+  - generate_full_report         → saves complete Markdown + JSON report
 
 INVESTIGATION APPROACH — driven by Scout findings:
 
@@ -193,11 +195,16 @@ INVESTIGATION APPROACH — driven by Scout findings:
    - What should I investigate next based on this finding?
    - Do I have enough evidence to conclude?
 
-4. When investigation is complete:
+4. If a CAPEv2 report is provided (path ending in .json in /app/data/):
+   - Call cape_dynamic_analysis with the report path
+   - If both static + dynamic are done, call hybrid_static_dynamic_report instead
+     of generate_full_report for the most complete analysis
+
+5. When investigation is complete:
    - Call mitre_attack_mapping to classify all behaviors
    - Call get_reasoning_trace to build the formal investigation chain
    - Call generate_full_report LAST — use ONLY these exact arguments:
-     apk_path=<the APK path>, output_path=/app/data/outputs/InsecureBankv2/t_app/SECURITY_REPORT.md
+     apk_path=<the APK path>, output_path=/app/data/SECURITY_REPORT.md
 
 Example reasoning chain:
   Scout said: "AES encryption detected, key origin unknown"
@@ -212,7 +219,7 @@ GUARDRAILS:
   - Do not call generate_full_report until you have run at least 3 tools
   - Maximum 8 tool calls total
   - Always call get_reasoning_trace before generate_full_report
-  - generate_full_report output_path MUST be /app/data/outputs/InsecureBankv2/t_app/SECURITY_REPORT.md""",
+  - generate_full_report output_path MUST be /app/data/SECURITY_REPORT.md""",
         markdown=True,
         debug_mode=False,
     )
@@ -341,7 +348,7 @@ async def run_analysis(apk_path: str) -> None:
                 "Read the Scout Brief carefully. Investigate the threat hypotheses "
                 "using the most relevant tools. Think out loud after each result. "
                 "When done, call get_reasoning_trace then call generate_full_report "
-                f"with apk_path={apk_path} and output_path=/app/data/outputs/InsecureBankv2/t_app/SECURITY_REPORT.md",
+                f"with apk_path={apk_path} and output_path=/app/data/SECURITY_REPORT.md",
                 stream=False,
                 show_tool_calls=True,
             )
@@ -373,5 +380,5 @@ async def run_analysis(apk_path: str) -> None:
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    target_apk = sys.argv[1] if len(sys.argv) > 1 else "/app/data/outputs/InsecureBankv2/t_app/test_app.apk"
+    target_apk = sys.argv[1] if len(sys.argv) > 1 else "/app/data/test_app.apk"
     asyncio.run(run_analysis(target_apk))

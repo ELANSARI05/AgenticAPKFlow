@@ -32,6 +32,8 @@ from tools.malware_tools import (
     generate_json_report,
     generate_security_report,
     run_full_analysis,
+    analyze_cape_report,
+    generate_hybrid_report,
 )
 
 mcp = FastMCP(
@@ -137,6 +139,33 @@ def generate_full_report(
     """
     return generate_security_report(apk_path, output_path)
 
+
+
+
+@mcp.tool()
+def cape_dynamic_analysis(report_path: str) -> dict:
+    """
+    Parse a CAPEv2 JSON sandbox report and extract behavioral findings:
+    suspicious API calls, runtime network connections, dropped files,
+    registry persistence, process injection, and MITRE ATT&CK mapping.
+    Provide the path to a local CAPEv2 report.json file.
+    """
+    return analyze_cape_report(report_path)
+
+
+@mcp.tool()
+def hybrid_static_dynamic_report(
+    apk_path: str,
+    cape_report_path: str,
+    output_path: str = "/app/data/HYBRID_REPORT.md",
+) -> str:
+    """
+    Generate a combined static + dynamic analysis report.
+    Merges your static APK findings with CAPEv2 sandbox behavioral results
+    into a single comprehensive Markdown report with unified MITRE ATT&CK mapping.
+    Call this as the FINAL step when a CAPEv2 report is available.
+    """
+    return generate_hybrid_report(apk_path, cape_report_path, output_path)
 
 if __name__ == "__main__":
     mcp.run()

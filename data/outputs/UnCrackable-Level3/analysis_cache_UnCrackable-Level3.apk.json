@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-03-22T00:18:01.841525Z",
+    "generated_at": "2026-03-22T00:13:48.312362Z",
     "tool": "Agentic-APK Analysis System",
     "version": "3.0",
     "apk_path": "/app/data/samples/UnCrackable-Level3.apk"
@@ -36,18 +36,6 @@
     "summary": "Package: owasp.mstg.uncrackable3 v1.0 | SDK 19\u201328 | 1 risk flag(s) [via aapt]",
     "extraction_method": "aapt"
   },
-  "network": {
-    "total_urls": 0,
-    "unique_domains": 0,
-    "hardcoded_ips": 0,
-    "suspicious_endpoint_count": 0,
-    "overall_risk": "LOW",
-    "urls": [],
-    "domains": [],
-    "ip_addresses": [],
-    "suspicious_endpoints": [],
-    "summary": "0 URLs across 0 domains, 0 hardcoded IPs, 0 suspicious endpoint(s)"
-  },
   "secrets": {
     "total_secrets_found": 1,
     "high_risk_count": 1,
@@ -79,6 +67,18 @@
       "note": "Native method declarations found but no Java-level crypto detected. Cryptographic operations are likely implemented in a .so binary \u2014 requires native binary analysis (e.g., Ghidra, radare2) to inspect."
     },
     "summary": "0 crypto operation(s), 0 key material instance(s) (0 hardcoded) \u2014 \u26a0\ufe0f native crypto suspected"
+  },
+  "network": {
+    "total_urls": 0,
+    "unique_domains": 0,
+    "hardcoded_ips": 0,
+    "suspicious_endpoint_count": 0,
+    "overall_risk": "LOW",
+    "urls": [],
+    "domains": [],
+    "ip_addresses": [],
+    "suspicious_endpoints": [],
+    "summary": "0 URLs across 0 domains, 0 hardcoded IPs, 0 suspicious endpoint(s)"
   },
   "obfuscation": {
     "obfuscation_level": "HEAVY",
@@ -132,95 +132,14 @@
     "correlations": [],
     "summary": "Found 0 dangerous permission correlation(s) \u2014 0 HIGH-risk threat(s) identified"
   },
-  "anti_analysis": {
-    "anti_analysis_techniques": 3,
-    "overall_risk": "HIGH",
-    "techniques": [
-      {
-        "technique": "Frida Detection",
-        "risk": "HIGH",
-        "file": "/sources/android/support/v4/util/PatternsCompat.java",
-        "bypass_hint": "Use Frida gadget in embedded mode or rename Frida server binary"
-      },
-      {
-        "technique": "Debugger Detection",
-        "risk": "HIGH",
-        "file": "/sources/sg/vantagepoint/uncrackable3/MainActivity.java",
-        "bypass_hint": "Frida: Java.use('android.os.Debug').isDebuggerConnected.implementation = function() { return false; }"
-      },
-      {
-        "technique": "Root Detection",
-        "risk": "HIGH",
-        "file": "/sources/sg/vantagepoint/util/RootDetection.java",
-        "bypass_hint": "Magisk Hide module or patch detection methods with Frida"
-      }
-    ],
-    "summary": "Detected 3 anti-analysis technique(s): Frida Detection, Debugger Detection, Root Detection"
-  },
-  "data_flows": {
-    "total_flows": 6,
-    "high_risk_flows": 0,
-    "overall_risk": "MEDIUM",
-    "flows": [
-      {
-        "source": "Clipboard",
-        "sink": "Log",
-        "risk": "MEDIUM",
-        "file": "/sources/android/support/v4/content/ContextCompat.java",
-        "description": "Clipboard data accessed and potentially sent to Log",
-        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
-      },
-      {
-        "source": "Contacts",
-        "sink": "Log",
-        "risk": "MEDIUM",
-        "file": "/sources/android/support/v4/provider/DocumentsContractApi19.java",
-        "description": "Contacts data accessed and potentially sent to Log",
-        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
-      },
-      {
-        "source": "IMEI",
-        "sink": "Log",
-        "risk": "MEDIUM",
-        "file": "/sources/android/support/v7/app/AppCompatDelegateImpl.java",
-        "description": "IMEI data accessed and potentially sent to Log",
-        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
-      },
-      {
-        "source": "IMEI",
-        "sink": "Reflection",
-        "risk": "MEDIUM",
-        "file": "/sources/android/support/v7/app/AppCompatDelegateImpl.java",
-        "description": "IMEI data accessed and potentially sent to Reflection",
-        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
-      },
-      {
-        "source": "Location",
-        "sink": "Log",
-        "risk": "MEDIUM",
-        "file": "/sources/android/support/v7/app/TwilightManager.java",
-        "description": "Location data accessed and potentially sent to Log",
-        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
-      },
-      {
-        "source": "Contacts",
-        "sink": "Log",
-        "risk": "MEDIUM",
-        "file": "/sources/android/support/v7/widget/SuggestionsAdapter.java",
-        "description": "Contacts data accessed and potentially sent to Log",
-        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
-      }
-    ],
-    "summary": "Detected 6 potential data flow(s) \u2014 0 involve network exfiltration"
-  },
   "mitre_attack": {
     "techniques_matched": 9,
     "tactics_covered": [
+      "Defense Evasion",
+      "Collection",
       "Command and Control",
       "Persistence",
-      "Collection",
-      "Discovery",
-      "Defense Evasion"
+      "Discovery"
     ],
     "overall_risk": "HIGH",
     "techniques": [
@@ -324,7 +243,88 @@
         "confidence": "MEDIUM"
       }
     ],
-    "summary": "Mapped 9 MITRE ATT&CK technique(s) across 5 tactic(s): Command and Control, Persistence, Collection, Discovery, Defense Evasion"
+    "summary": "Mapped 9 MITRE ATT&CK technique(s) across 5 tactic(s): Defense Evasion, Collection, Command and Control, Persistence, Discovery"
+  },
+  "data_flows": {
+    "total_flows": 6,
+    "high_risk_flows": 0,
+    "overall_risk": "MEDIUM",
+    "flows": [
+      {
+        "source": "Clipboard",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v4/content/ContextCompat.java",
+        "description": "Clipboard data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Contacts",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v4/provider/DocumentsContractApi19.java",
+        "description": "Contacts data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "IMEI",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/app/AppCompatDelegateImpl.java",
+        "description": "IMEI data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "IMEI",
+        "sink": "Reflection",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/app/AppCompatDelegateImpl.java",
+        "description": "IMEI data accessed and potentially sent to Reflection",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Location",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/app/TwilightManager.java",
+        "description": "Location data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      },
+      {
+        "source": "Contacts",
+        "sink": "Log",
+        "risk": "MEDIUM",
+        "file": "/sources/android/support/v7/widget/SuggestionsAdapter.java",
+        "description": "Contacts data accessed and potentially sent to Log",
+        "note": "Same-file co-occurrence of source and sink \u2014 manual review recommended to confirm actual data flow"
+      }
+    ],
+    "summary": "Detected 6 potential data flow(s) \u2014 0 involve network exfiltration"
+  },
+  "anti_analysis": {
+    "anti_analysis_techniques": 3,
+    "overall_risk": "HIGH",
+    "techniques": [
+      {
+        "technique": "Frida Detection",
+        "risk": "HIGH",
+        "file": "/sources/android/support/v4/util/PatternsCompat.java",
+        "bypass_hint": "Use Frida gadget in embedded mode or rename Frida server binary"
+      },
+      {
+        "technique": "Debugger Detection",
+        "risk": "HIGH",
+        "file": "/sources/sg/vantagepoint/uncrackable3/MainActivity.java",
+        "bypass_hint": "Frida: Java.use('android.os.Debug').isDebuggerConnected.implementation = function() { return false; }"
+      },
+      {
+        "technique": "Root Detection",
+        "risk": "HIGH",
+        "file": "/sources/sg/vantagepoint/util/RootDetection.java",
+        "bypass_hint": "Magisk Hide module or patch detection methods with Frida"
+      }
+    ],
+    "summary": "Detected 3 anti-analysis technique(s): Frida Detection, Debugger Detection, Root Detection"
   },
   "reasoning_trace": {
     "apk_path": "/app/data/samples/UnCrackable-Level3.apk",

@@ -1,0 +1,87 @@
+{
+  "info": {
+    "id": 1,
+    "score": 8,
+    "duration": 120,
+    "category": "malware"
+  },
+  "target": {
+    "file": {
+      "name": "sample_malware.exe",
+      "md5": "abc123def456abc123def456abc123de",
+      "sha256": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+      "type": "PE32 executable"
+    }
+  },
+  "signatures": [
+    {"name": "network_http", "description": "HTTP traffic detected", "severity": 2},
+    {"name": "antidbg_windows", "description": "Attempts to detect debugger", "severity": 3},
+    {"name": "injection_createremotethread", "description": "Process injection via CreateRemoteThread", "severity": 3},
+    {"name": "persistence_registry", "description": "Writes to registry Run key for persistence", "severity": 3}
+  ],
+  "malfamily": "Emotet",
+  "behavior": {
+    "processes": [
+      {
+        "process_name": "sample_malware.exe",
+        "calls": [
+          {"api": "IsDebuggerPresent", "arguments": []},
+          {"api": "GetTickCount", "arguments": []},
+          {"api": "VirtualAllocEx", "arguments": [{"name": "size", "value": "4096"}]},
+          {"api": "WriteProcessMemory", "arguments": [{"name": "address", "value": "0x00400000"}]},
+          {"api": "CreateRemoteThread", "arguments": [{"name": "pid", "value": "1234"}]},
+          {"api": "RegSetValueExA", "arguments": [{"name": "key", "value": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater"}]},
+          {"api": "RegCreateKeyExA", "arguments": [{"name": "key", "value": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"}]},
+          {"api": "HttpSendRequestA", "arguments": [{"name": "url", "value": "/gate.php"}]},
+          {"api": "InternetConnectA", "arguments": [{"name": "host", "value": "185.220.101.45"}]},
+          {"api": "CreateFileA", "arguments": [{"name": "path", "value": "C:\\Users\\user\\AppData\\Roaming\\updater.exe"}]},
+          {"api": "WriteFile", "arguments": [{"name": "path", "value": "C:\\Users\\user\\AppData\\Roaming\\updater.exe"}]},
+          {"api": "CreateProcessA", "arguments": [{"name": "application", "value": "C:\\Users\\user\\AppData\\Roaming\\updater.exe"}]},
+          {"api": "CryptEncrypt", "arguments": [{"name": "algorithm", "value": "AES"}]},
+          {"api": "URLDownloadToFileA", "arguments": [{"name": "url", "value": "http://185.220.101.45/payload.exe"}]}
+        ]
+      }
+    ],
+    "summary": {
+      "files": [
+        "C:\\Users\\user\\AppData\\Roaming\\updater.exe",
+        "C:\\Windows\\Temp\\tmp_payload.bin",
+        "C:\\Users\\user\\AppData\\Local\\Temp\\log.dat"
+      ],
+      "keys": [
+        "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater",
+        "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options",
+        "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+      ]
+    }
+  },
+  "network": {
+    "tcp": [
+      {"dst": "185.220.101.45", "dport": 80},
+      {"dst": "185.220.101.45", "dport": 443},
+      {"dst": "92.63.197.48", "dport": 8080}
+    ],
+    "udp": [],
+    "http": [
+      {"uri": "http://185.220.101.45/gate.php", "host": "185.220.101.45", "method": "POST"},
+      {"uri": "http://185.220.101.45/payload.exe", "host": "185.220.101.45", "method": "GET"},
+      {"uri": "http://92.63.197.48:8080/config", "host": "92.63.197.48", "method": "POST"}
+    ],
+    "dns": [
+      {"request": "emotet-c2.evil.com"},
+      {"request": "update-server.malicious.net"}
+    ]
+  },
+  "dropped": [
+    {
+      "name": "updater.exe",
+      "path": "C:\\Users\\user\\AppData\\Roaming\\updater.exe",
+      "type": "PE32 executable"
+    },
+    {
+      "name": "config.dat",
+      "path": "C:\\Windows\\Temp\\config.dat",
+      "type": "data"
+    }
+  ]
+}
